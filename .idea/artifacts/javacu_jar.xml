@@ -1,0 +1,10 @@
+<component name="ArtifactManager">
+  <artifact type="jar" name="javacu:jar">
+    <output-path>$PROJECT_DIR$/out/artifacts/javacu_jar</output-path>
+    <root id="archive" name="javacu.jar">
+      <element id="module-output" name="javacu" />
+      <element id="extracted-dir" path="$MAVEN_REPOSITORY$/org/jetbrains/annotations/24.0.0/annotations-24.0.0.jar" path-in-jar="/" />
+      <element id="file-copy" path="$MAVEN_REPOSITORY$/org/jetbrains/annotations/24.0.0/annotations-24.0.0.jar" />
+    </root>
+  </artifact>
+</component>

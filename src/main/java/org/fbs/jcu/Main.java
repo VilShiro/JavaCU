@@ -1,13 +1,14 @@
 package org.fbs.jcu;
 
-import java.io.File;
-import java.io.IOException;
-import java.util.ArrayList;
-import java.util.List;
+import org.fbs.jcu.data.Key;
+import org.fbs.jcu.data.Option;
+import org.fbs.jcu.exception.ArgsException;
+import org.fbs.jcu.util.ArgsParser;
 
 public class Main {
 
-    public static void main(String[] args){
-
+    public static void main(String[] args) throws ArgsException {
+        new ArgsParser(args, new Option[6], new Key[6], false);
+        System.out.println(789);
     }
 }
