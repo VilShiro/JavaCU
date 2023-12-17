@@ -13,7 +13,7 @@ public class Key {
         this.typing = typing;
     }
 
-    private boolean standardValue = false;
+    private boolean value = false;
     private String info;
     private final String typing, alias;
 
@@ -29,16 +29,20 @@ public class Key {
         return alias;
     }
 
-    public boolean isStandardValue() {
-        return standardValue;
+    public boolean isValue() {
+        return value;
     }
 
     public void call(){
-        standardValue = true;
+        value = true;
         onSetting();
     }
 
     private void onSetting() {
     }
 
+    @Override
+    public String toString() {
+        return typing + " : " + alias + " | " + value + "      " + info;
+    }
 }
