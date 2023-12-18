@@ -1,7 +1,11 @@
 # for running project from /javaCU/, for example app "cjp"
-java -cp javacu.jar org.fbs.jcu.app.CJP
 
-# for .bashrc
-cjp(){
-  java -cp javacu.jar org.fbs.jcu.app.CJP "$*"
-}
+# for .inputrc
+
+## javaCU
+
+#TAB: menu-complete
+#set show-all-if-ambiguous on
+#set menu-complete-display-prefix on
+
+## javaCU

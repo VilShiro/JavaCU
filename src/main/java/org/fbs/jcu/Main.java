@@ -55,7 +55,7 @@ public class Main extends App {
     };
 
     public Main(String[] args, AppArguments appArguments, boolean mustContainsArgs) throws ArgsException, IOException, InterruptedException {
-        super(args, appArguments, mustContainsArgs);
+        super(args, appArguments, mustContainsArgs, "main", "org/fbs/");
         run();
     }
 

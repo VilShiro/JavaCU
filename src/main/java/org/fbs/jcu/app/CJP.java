@@ -8,7 +8,7 @@ import java.util.Arrays;
 public class CJP extends App {
 
     public CJP(String[] args, AppArguments appArguments) throws ArgsException {
-        super(args, appArguments, false);
+        super(args, appArguments, false, "createjp", "");
         System.out.println(Arrays.toString(getArgsParser().getKeys().toArray()));
     }
 
@@ -22,7 +22,18 @@ public class CJP extends App {
             new Option("-packageName", "-pn", true, "Set your package name(divide folders using '/')"),
             new Option("-classesFolder", "-cf", "classes/", "Set folder name for compiled code(divide folders using '/')"),
             new Option("-projectName", "-pj", true, "Set name for your project"),
-
+            new Option("-projectPackage", "-pp", true, ""){
+                @Override
+                public void onSetting() {
+                    projectPackage = getValue().toString();
+                }
+            },
+            new Option("-appName", "-pp", true, ""){
+                @Override
+                public void onSetting() {
+                    funcName = getValue().toString();
+                }
+            }
     };
     private static final Key[] keys = new Key[]{
             new Key("--createMain", "--cm")
