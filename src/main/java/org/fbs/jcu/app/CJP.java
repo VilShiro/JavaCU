@@ -3,13 +3,13 @@ package org.fbs.jcu.app;
 import org.fbs.jcu.data.*;
 import org.fbs.jcu.exception.ArgsException;
 
-import java.util.Arrays;
-
 public class CJP extends App {
 
+    private static AppArguments appArguments;
+
     public CJP(String[] args, AppArguments appArguments) throws ArgsException {
-        super(args, appArguments, false, "createjp", "");
-        System.out.println(Arrays.toString(getArgsParser().getKeys().toArray()));
+        super(args, appArguments, false, "createjp", "org.fbs.jcu.app.CJP");
+        run();
     }
 
     private static final Option[] options = new Option[]{
@@ -19,34 +19,54 @@ public class CJP extends App {
                     callArg(keys[0]);
                 }
             },
-            new Option("-packageName", "-pn", true, "Set your package name(divide folders using '/')"),
             new Option("-classesFolder", "-cf", "classes/", "Set folder name for compiled code(divide folders using '/')"),
             new Option("-projectName", "-pj", true, "Set name for your project"),
-            new Option("-projectPackage", "-pp", true, ""){
+            new Option("-packageName", "-pn", true, "Set your package name(divide folders using '/')"){
                 @Override
                 public void onSetting() {
                     projectPackage = getValue().toString();
                 }
             },
-            new Option("-appName", "-pp", true, ""){
+            //new Option("-appName", "-an", true, ""){
+                //@Override
+                //public void onSetting() {
+                    //funcName = getValue().toString();
+                //}
+            //}
+
+    };
+    private static final Key[] keys = new Key[]{
+            new Key("--createMain", "--cm"),
+    };
+    private static final Function[] functions = new Function[]{
+            new Function("help") {
                 @Override
-                public void onSetting() {
-                    funcName = getValue().toString();
+                public void call() {
+                    System.out.printf(
+                            """
+                            There is a options, keys and functions for "%s
+                            """, appName + "\""+
+                                    "\n\nOptions(required has \"*\", else standard value in \"()\"):\n" + getOptionsAsString(appArguments) +
+                                    "\nKeys:\n" + getKeysAsString(appArguments) +
+                                    "\nFunctions:\n" + getFunctionsAsString(appArguments)
+                    );
                 }
             }
     };
-    private static final Key[] keys = new Key[]{
-            new Key("--createMain", "--cm")
-    };
-    private static final Function[] functions = new Function[]{};
 
     public static void main(String[] args) throws ArgsException {
-        AppArguments appArguments = new AppArguments(options, keys, functions);
-        appArguments.setCanContainFunctions(false);
+         appArguments = new AppArguments(options, keys, functions);
 
         new CJP(args, appArguments);
-
-        // CREATE: 16.12.2023: create an app for creating java project in console, has command in install.sh(preview)
     }
 
+    @Override
+    public void run(){
+        if (!getParsed().getFunctions().isEmpty()){
+            getParsed().getFunctions().get(0).call();
+        }
+        else{
+            // CREATE: 19.12.2023: create an app for creating java project in console
+        }
+    }
 }

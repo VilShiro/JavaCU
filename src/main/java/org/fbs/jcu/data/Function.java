@@ -25,14 +25,10 @@ public abstract class Function {
         return typing;
     }
 
-    public abstract void use();
-
-    public void call(){
-        use();
-    }
+    public abstract void call();
 
     @Override
     public String toString() {
-        return "Function: " + typing + "      " + info;
+        return typing + " ".repeat(Math.max(0, 35 - (typing.toCharArray().length))) + info;
     }
 }

@@ -43,6 +43,6 @@ public class Key {
 
     @Override
     public String toString() {
-        return typing + " : " + alias + " | " + value + "      " + info;
+        return typing + " " + alias + " ".repeat(Math.max(0, 35 - (typing.toCharArray().length + alias.toCharArray().length + 1))) + info;
     }
 }

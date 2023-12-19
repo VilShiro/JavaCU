@@ -16,6 +16,7 @@ public class Main extends App {
                     callArg(keys[0]);
                 }
             },
+            new Option("-opt", "-o", false)
     };
     private static final Key[] keys = new Key[]{
             new Key("--createMain", "--cm"),
@@ -24,7 +25,7 @@ public class Main extends App {
     private static final Function[] functions = new Function[]{
             new Function("hello-world") {
                 @Override
-                public void use() {
+                public void call() {
                     String string = "hello world";
                     if (keys[1].isValue()){
                         string = string.toUpperCase();
@@ -34,7 +35,7 @@ public class Main extends App {
             },
             new Function("good-bye") {
                 @Override
-                public void use() {
+                public void call() {
                     String string = "good bye";
                     if (keys[1].isValue()){
                         string = string.toUpperCase();
@@ -44,7 +45,7 @@ public class Main extends App {
             },
             new Function("oh") {
                 @Override
-                public void use() {
+                public void call() {
                     String string = "oh, no";
                     if (keys[1].isValue()){
                         string = string.toUpperCase();

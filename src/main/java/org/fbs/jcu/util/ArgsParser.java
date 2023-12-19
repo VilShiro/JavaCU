@@ -47,15 +47,20 @@ public class ArgsParser {
         for (String arg: args){
             i ++;
             if (parseOption){
-                assert option != null;
-                option.setValue(arg);
-                this.options.add(option);
-                parseOption = false;
-                continue;
+                if (!(arg.toCharArray()[0] == '-')) {
+                    assert option != null;
+                    option.setValue(arg);
+                    this.options.add(option);
+                    parseOption = false;
+                    continue;
+                }
+                else {
+                    throw new ArgsException("\"" + arg + "\" is an invalid option value");
+                }
             }
             if (arg.toCharArray()[0] == '-' && arg.toCharArray()[1] != '-') {
                 if (!appArguments.isCanContainOptions()){
-                    throw new ArgsException("CJP arguments can't contains options");
+                    throw new ArgsException("App arguments can't contains options");
                 }
                 List<String> optionTyping = optionsTypingToArr(appArguments.getOptions());
                 List<String> optionAlias = optionsAliasToArr(appArguments.getOptions());
@@ -70,7 +75,7 @@ public class ArgsParser {
             }
             else if (arg.toCharArray()[0] == '-' && arg.toCharArray()[1] == '-') {
                 if (!appArguments.isCanContainKeys()){
-                    throw new ArgsException("CJP arguments can't contains keys");
+                    throw new ArgsException("App arguments can't contains keys");
                 }
                 List<String> keyTyping = keysTypingToArr(appArguments.getKeys());
                 List<String> keyAlias = keysAliasToArr(appArguments.getKeys());
@@ -85,7 +90,7 @@ public class ArgsParser {
             }
             else if (searchInFunctionsByArg(appArguments.getFunctions(), arg) != null){
                 if (!appArguments.isCanContainFunctions()){
-                    throw new ArgsException("CJP arguments can't contains functions");
+                    throw new ArgsException("App arguments can't contains functions");
                 }
                 if (i != 0){
                     throw new ArgsException("Function must be first argument / Arguments can contains only one function");
