@@ -23,7 +23,7 @@ public class Main extends App {
             new Key("--upperCase", "--uc")
     };
     private static final Function[] functions = new Function[]{
-            new Function("hello-world") {
+            new Function("hello-world", new Option[]{}, new Key[]{}) {
                 @Override
                 public void call() {
                     String string = "hello world";
@@ -33,7 +33,7 @@ public class Main extends App {
                     System.out.println(string);
                 }
             },
-            new Function("good-bye") {
+            new Function("good-bye",new Option[]{}, new Key[]{}) {
                 @Override
                 public void call() {
                     String string = "good bye";
@@ -43,7 +43,7 @@ public class Main extends App {
                     System.out.println(string);
                 }
             },
-            new Function("oh") {
+            new Function("oh", new Option[]{}, new Key[]{}) {
                 @Override
                 public void call() {
                     String string = "oh, no";

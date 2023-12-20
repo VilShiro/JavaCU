@@ -51,10 +51,23 @@ public class CJP extends App {
                                     "\nFunctions:\n" + getFunctionsAsString(appArguments)
                     );
                 }
+            },
+            new Function("huy") {
+                @Override
+                public void call() {
+                    System.out.println(0);
+                }
             }
     };
 
     public static void main(String[] args) throws ArgsException {
+        functions[0].setOptions(new Option[]{
+                new Option("-option", "-op", "opt"),
+                new Option("-argopt", "-ao", "argo")
+        });
+        functions[0].setKeys(new Key[]{
+                new Key("--key0", "-k")
+        });
          appArguments = new AppArguments(options, keys, functions);
 
         new CJP(args, appArguments);
@@ -68,5 +81,7 @@ public class CJP extends App {
         else{
             // CREATE: 19.12.2023: create an app for creating java project in console
         }
+        System.out.println(getBashApp());
+        System.out.println(getBashAppComplete());
     }
 }
