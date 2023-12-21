@@ -21,7 +21,7 @@ public class ArgsParser {
 
     public ArgsParser(String @NotNull [] args, AppArguments appArguments, boolean mustContainsArgs) throws ArgsException {
         if (args.length == 0 && mustContainsArgs){
-            throw new ArgsException("Does not have an args.");
+            throw new ArgsException("Does not have an arguments.");
         }
         parse(args, appArguments);
     }
@@ -33,7 +33,9 @@ public class ArgsParser {
     @Contract(pure = true)
     private void parse(String @NotNull [] args, @NotNull AppArguments appArguments) throws ArgsException {
         boolean parseOption = false;
+        boolean functionOption = false;
         Option option = null;
+        Function function = null;
 
         final List<Option> requiredOptions = new ArrayList<>();
         for (Option o: appArguments.getOptions()){
@@ -50,7 +52,14 @@ public class ArgsParser {
                 if (!(arg.toCharArray()[0] == '-')) {
                     assert option != null;
                     option.setValue(arg);
-                    this.options.add(option);
+
+                    if (functionOption){
+                        this.functions.get(0).addOption(option);
+                    }
+                    else {
+                        this.options.add(option);
+                    }
+
                     parseOption = false;
                     continue;
                 }
@@ -62,30 +71,71 @@ public class ArgsParser {
                 if (!appArguments.isCanContainOptions()){
                     throw new ArgsException("App arguments can't contains options");
                 }
-                List<String> optionTyping = optionsTypingToArr(appArguments.getOptions());
-                List<String> optionAlias = optionsAliasToArr(appArguments.getOptions());
-                if (arrayHas(optionTyping.toArray(), arg) || arrayHas(optionAlias.toArray(), arg)) {
-                    parseOption = true;
-                    option = searchInOptionsByArg(appArguments.getOptions(), arg);
-                    continue;
+                if (function != null){
+                    List<String> optionTyping = optionsTypingToArr(appArguments.getOptions());
+                    List<String> optionAlias = optionsAliasToArr(appArguments.getOptions());
+
+                    List<String> functionOptionTyping = optionsTypingToArr(function.getOptions());
+                    List<String> functionOptionAlias = optionsAliasToArr(function.getOptions());
+                    if (arrayHas(functionOptionTyping.toArray(), arg) || arrayHas(functionOptionAlias.toArray(), arg)){
+                        parseOption = true;
+                        functionOption = true;
+                        option = searchInOptionsByArg(function.getOptions(), arg);
+                        continue;
+                    }
+                    else if (arrayHas(optionTyping.toArray(), arg) || arrayHas(optionAlias.toArray(), arg)) {
+                        parseOption = true;
+                        option = searchInOptionsByArg(appArguments.getOptions(), arg);
+                        continue;
+                    } else {
+                        throw new ArgsException("Unknown option: " + arg);
+                    }
                 }
-                else{
-                    throw new ArgsException("Unknown option: " + arg);
+                else {
+                    List<String> optionTyping = optionsTypingToArr(appArguments.getOptions());
+                    List<String> optionAlias = optionsAliasToArr(appArguments.getOptions());
+                    if (arrayHas(optionTyping.toArray(), arg) || arrayHas(optionAlias.toArray(), arg)) {
+                        parseOption = true;
+                        option = searchInOptionsByArg(appArguments.getOptions(), arg);
+                        continue;
+                    } else {
+                        throw new ArgsException("Unknown option: " + arg);
+                    }
                 }
             }
             else if (arg.toCharArray()[0] == '-' && arg.toCharArray()[1] == '-') {
                 if (!appArguments.isCanContainKeys()){
                     throw new ArgsException("App arguments can't contains keys");
                 }
-                List<String> keyTyping = keysTypingToArr(appArguments.getKeys());
-                List<String> keyAlias = keysAliasToArr(appArguments.getKeys());
-                if (arrayHas(keyTyping.toArray(), arg) || arrayHas(keyAlias.toArray(), arg)) {
-                    Objects.requireNonNull(searchInKeysByArg(appArguments.getKeys(), arg)).call();
-                    this.keys.add(searchInKeysByArg(appArguments.getKeys(), arg));
-                    continue;
+                if (function != null){
+                    List<String> keyTyping = keysTypingToArr(appArguments.getKeys());
+                    List<String> keyAlias = keysAliasToArr(appArguments.getKeys());
+
+                    List<String> functionKeyTyping = keysTypingToArr(function.getKeys());
+                    List<String> functionKeyAlias = keysAliasToArr(function.getKeys());
+                    if (arrayHas(functionKeyTyping.toArray(), arg) || arrayHas(functionKeyAlias.toArray(), arg)) {
+                        Objects.requireNonNull(searchInKeysByArg(function.getKeys(), arg)).call();
+                        this.functions.get(0).addKey(searchInKeysByArg(function.getKeys(), arg));
+                        continue;
+                    }
+                    else if (arrayHas(keyTyping.toArray(), arg) || arrayHas(keyAlias.toArray(), arg)) {
+                        Objects.requireNonNull(searchInKeysByArg(appArguments.getKeys(), arg)).call();
+                        this.keys.add(searchInKeysByArg(appArguments.getKeys(), arg));
+                        continue;
+                    } else {
+                        throw new ArgsException("Unknown key: " + arg);
+                    }
                 }
                 else{
-                    throw new ArgsException("Unknown key: " + arg);
+                    List<String> keyTyping = keysTypingToArr(appArguments.getKeys());
+                    List<String> keyAlias = keysAliasToArr(appArguments.getKeys());
+                    if (arrayHas(keyTyping.toArray(), arg) || arrayHas(keyAlias.toArray(), arg)) {
+                        Objects.requireNonNull(searchInKeysByArg(appArguments.getKeys(), arg)).call();
+                        this.keys.add(searchInKeysByArg(appArguments.getKeys(), arg));
+                        continue;
+                    } else {
+                        throw new ArgsException("Unknown key: " + arg);
+                    }
                 }
             }
             else if (searchInFunctionsByArg(appArguments.getFunctions(), arg) != null){
@@ -96,6 +146,7 @@ public class ArgsParser {
                     throw new ArgsException("Function must be first argument / Arguments can contains only one function");
                 }
                 this.functions.add(searchInFunctionsByArg(appArguments.getFunctions(), arg));
+                function = searchInFunctionsByArg(appArguments.getFunctions(), arg);
             }
             else {
                 throw new ArgsException("Unknown argument: " + arg);
@@ -127,8 +178,12 @@ public class ArgsParser {
         return functions;
     }
 
+    public Function getFunction(){
+        return functions.get(0);
+    }
+
     @Contract(pure = true)
-    private @Nullable Function searchInFunctionsByArg(Function @NotNull [] functions, String arg){
+    private @Nullable Function searchInFunctionsByArg(@NotNull List<Function> functions, String arg){
         for (Function function: functions){
             if (Objects.equals(function.getTyping(), arg)){
                 return function;
@@ -137,7 +192,7 @@ public class ArgsParser {
         return null;
     }
 
-    private @Nullable Option searchInOptionsByArg(Option @NotNull [] options, String arg){
+    private @Nullable Option searchInOptionsByArg(@NotNull List<Option> options, String arg){
         for (Option option: options){
             if (Objects.equals(option.getAlias(), arg) || Objects.equals(option.getTyping(), arg)){
                 return option;
@@ -146,7 +201,7 @@ public class ArgsParser {
         return null;
     }
 
-    private @Nullable Key searchInKeysByArg(Key @NotNull [] keys, String arg){
+    private @Nullable Key searchInKeysByArg(@NotNull List<Key> keys, String arg){
         for (Key key: keys){
             if (Objects.equals(key.getAlias(), arg) || Objects.equals(key.getTyping(), arg)){
                 return key;
@@ -155,7 +210,7 @@ public class ArgsParser {
         return null;
     }
 
-    private @NotNull List<String> keysAliasToArr(Key @NotNull [] keys) {
+    private @NotNull List<String> keysAliasToArr(@NotNull List<Key> keys) {
         List<String> typing = new ArrayList<>();
         for (Key key: keys){
             typing.add(key.getAlias());
@@ -163,7 +218,7 @@ public class ArgsParser {
         return typing;
     }
 
-    private @NotNull List<String> keysTypingToArr(Key @NotNull [] keys) {
+    private @NotNull List<String> keysTypingToArr(@NotNull List<Key> keys) {
         List<String> typing = new ArrayList<>();
         for (Key key: keys){
             typing.add(key.getTyping());
@@ -172,7 +227,7 @@ public class ArgsParser {
     }
 
     @Contract(pure = true)
-    private @NotNull List<String> optionsTypingToArr(Option @NotNull [] options){
+    private @NotNull List<String> optionsTypingToArr(@NotNull List<Option> options){
         List<String> typing = new ArrayList<>();
         for (Option option: options){
             typing.add(option.getTyping());
@@ -180,7 +235,7 @@ public class ArgsParser {
         return typing;
     }
     @Contract(pure = true)
-    private @NotNull List<String> optionsAliasToArr(Option @NotNull [] options){
+    private @NotNull List<String> optionsAliasToArr(@NotNull List<Option> options){
         List<String> typing = new ArrayList<>();
         for (Option option: options){
             typing.add(option.getAlias());

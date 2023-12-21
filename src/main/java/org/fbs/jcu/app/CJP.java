@@ -39,20 +39,7 @@ public class CJP extends App {
             new Key("--createMain", "--cm"),
     };
     private static final Function[] functions = new Function[]{
-            new Function("help") {
-                @Override
-                public void call() {
-                    System.out.printf(
-                            """
-                            There is a options, keys and functions for "%s
-                            """, appName + "\""+
-                                    "\n\nOptions(required has \"*\", else standard value in \"()\"):\n" + getOptionsAsString(appArguments) +
-                                    "\nKeys:\n" + getKeysAsString(appArguments) +
-                                    "\nFunctions:\n" + getFunctionsAsString(appArguments)
-                    );
-                }
-            },
-            new Function("huy") {
+            new Function("test-run", "Launching your project under controlled conditions") {
                 @Override
                 public void call() {
                     System.out.println(0);
@@ -61,27 +48,36 @@ public class CJP extends App {
     };
 
     public static void main(String[] args) throws ArgsException {
-        functions[0].setOptions(new Option[]{
+        functions[0].addOptions(new Option[]{
                 new Option("-option", "-op", "opt"),
                 new Option("-argopt", "-ao", "argo")
         });
-        functions[0].setKeys(new Key[]{
-                new Key("--key0", "-k")
+        functions[0].addKeys(new Key[]{
+                new Key("--key0", "-k"),
+                new Key("--ff", "--f")
         });
-         appArguments = new AppArguments(options, keys, functions);
+        appArguments = new AppArguments(options, keys, functions);
 
+        for (Function function: appArguments.getFunctions()) {
+            for (Key key: function.getKeys()){
+                System.out.println(key);
+            }
+        }
         new CJP(args, appArguments);
     }
 
     @Override
     public void run(){
         if (!getParsed().getFunctions().isEmpty()){
-            getParsed().getFunctions().get(0).call();
+            if (getParsed().getFunction().getKeys().get(0).isValue()){
+                System.out.println(getParsed().getFunction().toHelpString());
+            }
+            else {
+                getParsed().getFunction().call();
+            }
         }
         else{
             // CREATE: 19.12.2023: create an app for creating java project in console
         }
-        System.out.println(getBashApp());
-        System.out.println(getBashAppComplete());
     }
 }

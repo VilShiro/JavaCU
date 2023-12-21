@@ -1,11 +1,20 @@
 package org.fbs.jcu.data;
 
+import org.jetbrains.annotations.NotNull;
+
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+
 public class AppArguments {
 
-    public AppArguments(Option[] options, Key[] keys, Function[] functions){
-        this.functions = functions;
-        this.keys = keys;
-        this.options = options;
+    public AppArguments(Option @NotNull [] options, Key[] keys, Function @NotNull [] functions){
+        this.functions = new ArrayList<>();
+        this.functions.addAll(Arrays.asList(functions));
+        this.keys = new ArrayList<>();
+        this.keys.addAll(Arrays.asList(keys));
+        this.options = new ArrayList<>();
+        this.options.addAll(Arrays.asList(options));
     }
 
     private boolean requiredFunction = false;
@@ -13,9 +22,21 @@ public class AppArguments {
     private boolean canContainKeys = true;
     private boolean canContainFunctions = true;
 
-    private final Option[] options;
-    private final Key[] keys;
-    private final Function[] functions;
+    private final List<Option> options;
+    private final List<Key> keys;
+    private final List<Function> functions;
+
+    public void addToOptions(Option option){
+        options.add(option);
+    }
+
+    public void addToKeys(Key key){
+        keys.add(key);
+    }
+
+    public void addToFunctions(Function function){
+        functions.add(function);
+    }
 
     public boolean isRequiredFunction() {
         return requiredFunction;
@@ -52,15 +73,15 @@ public class AppArguments {
         this.canContainFunctions = canContainFunctions;
     }
 
-    public Option[] getOptions() {
+    public List<Option> getOptions() {
         return options;
     }
 
-    public Key[] getKeys() {
+    public List<Key> getKeys() {
         return keys;
     }
 
-    public Function[] getFunctions() {
+    public List<Function> getFunctions() {
         return functions;
     }
 }

@@ -2,10 +2,8 @@ package org.fbs.jcu;
 
 import org.fbs.jcu.data.*;
 import org.fbs.jcu.exception.ArgsException;
-import org.fbs.jcu.util.CmdExecutor;
 
 import java.io.IOException;
-import java.util.Collections;
 
 public class Main extends App {
 
