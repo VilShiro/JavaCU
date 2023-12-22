@@ -11,39 +11,28 @@ public abstract class Function {
 
     public Function(String typing){
         this.typing = typing;
-        this.options = new ArrayList<>();
-        this.keys = new ArrayList<>();
-        this.keys.add(new Key("--help", "--help"));
+        this.keys.add(new Key("--help", "--help", "Get info adout function, get its options and key"));
     }
     public Function(String typing, String info){
+        this(typing);
         this.info = info;
-        this.typing = typing;
-        this.options = new ArrayList<>();
-        this.keys = new ArrayList<>();
-        this.keys.add(new Key("--help", "--help"));
     }
     public Function(String typing, Option[] options, Key[] keys){
-        this.typing = typing;
-        this.options = new ArrayList<>();
+        this(typing);
         this.options.addAll(Arrays.asList(options));
-        this.keys = new ArrayList<>();
         this.keys.addAll(Arrays.asList(keys));
-        this.keys.add(new Key("--help", "--help"));
     }
     public Function(String typing, Option[] options, Key[] keys, String info){
-        this.typing = typing;
+        this(typing);
         this.info = info;
-        this.options = new ArrayList<>();
         this.options.addAll(Arrays.asList(options));
-        this.keys = new ArrayList<>();
         this.keys.addAll(Arrays.asList(keys));
-        this.keys.add(new Key("--help", "--help"));
     }
 
     private final String typing;
     private String info;
-    private final List<Option> options;
-    private final List<Key> keys;
+    private final List<Option> options = new ArrayList<>();
+    private final List<Key> keys = new ArrayList<>();
 
     public void addOptions(Option[] options){
         this.options.addAll(Arrays.asList(options));

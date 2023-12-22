@@ -115,7 +115,7 @@ public class ArgsParser {
                     List<String> functionKeyAlias = keysAliasToArr(function.getKeys());
                     if (arrayHas(functionKeyTyping.toArray(), arg) || arrayHas(functionKeyAlias.toArray(), arg)) {
                         Objects.requireNonNull(searchInKeysByArg(function.getKeys(), arg)).call();
-                        this.functions.get(0).addKey(searchInKeysByArg(function.getKeys(), arg));
+                        this.keys.add(searchInKeysByArg(function.getKeys(), arg));
                         continue;
                     }
                     else if (arrayHas(keyTyping.toArray(), arg) || arrayHas(keyAlias.toArray(), arg)) {

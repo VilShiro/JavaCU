@@ -58,11 +58,6 @@ public class CJP extends App {
         });
         appArguments = new AppArguments(options, keys, functions);
 
-        for (Function function: appArguments.getFunctions()) {
-            for (Key key: function.getKeys()){
-                System.out.println(key);
-            }
-        }
         new CJP(args, appArguments);
     }
 
