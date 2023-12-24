@@ -79,7 +79,7 @@ public abstract class Function {
         return typing;
     }
 
-    public abstract void call();
+    public abstract void call() throws Exception;
 
     public String toHelpString(){
         return typing + " ".repeat(Math.max(0, 35 - (typing.toCharArray().length))) + info + "\n    " + typing + "'s options and keys: " +

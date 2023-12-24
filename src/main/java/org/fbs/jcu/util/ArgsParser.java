@@ -19,9 +19,9 @@ public class ArgsParser {
     // value - word who been after option
     // key - word, before it must be "--", and it can't contain value itself
 
-    public ArgsParser(String @NotNull [] args, AppArguments appArguments, boolean mustContainsArgs, boolean canContainSingleArgs) throws ArgsException {
-        if (args.length == 0 && mustContainsArgs){
-            throw new ArgsException("Does not have an arguments.");
+    public ArgsParser(String @NotNull [] args, AppArguments appArguments, boolean mustContainArgs, boolean canContainSingleArgs) throws ArgsException {
+        if (args.length == 0 && mustContainArgs){
+            throw new ArgsException("Does not have an arguments, must contain arguments");
         }
         parse(args, appArguments, canContainSingleArgs);
     }
