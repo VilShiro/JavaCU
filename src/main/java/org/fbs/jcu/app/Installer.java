@@ -6,7 +6,7 @@ import org.fbs.jcu.exception.ArgsException;
 
 public class Installer extends App {
     public Installer(String[] args, AppArguments appArguments, boolean mustContainsArgs) throws ArgsException {
-        super(args, appArguments, mustContainsArgs, "installer", "org.fbs.jcu.app.Installer");
+        super(args, appArguments, mustContainsArgs, true, "installer", "org.fbs.jcu.app.Installer");
     }
 
     public static void main(String[] args) {

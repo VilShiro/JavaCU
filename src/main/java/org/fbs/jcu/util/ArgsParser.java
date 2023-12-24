@@ -19,19 +19,20 @@ public class ArgsParser {
     // value - word who been after option
     // key - word, before it must be "--", and it can't contain value itself
 
-    public ArgsParser(String @NotNull [] args, AppArguments appArguments, boolean mustContainsArgs) throws ArgsException {
+    public ArgsParser(String @NotNull [] args, AppArguments appArguments, boolean mustContainsArgs, boolean canContainSingleArgs) throws ArgsException {
         if (args.length == 0 && mustContainsArgs){
             throw new ArgsException("Does not have an arguments.");
         }
-        parse(args, appArguments);
+        parse(args, appArguments, canContainSingleArgs);
     }
 
     private final List<Option> options = new ArrayList<>();
     private final List<Key> keys = new ArrayList<>();
     private final List<Function> functions = new ArrayList<>();
+    private final List<String> arguments = new ArrayList<>();
 
     @Contract(pure = true)
-    private void parse(String @NotNull [] args, @NotNull AppArguments appArguments) throws ArgsException {
+    private void parse(String @NotNull [] args, @NotNull AppArguments appArguments, boolean canContainSingleArgs) throws ArgsException {
         boolean parseOption = false;
         boolean functionOption = false;
         Option option = null;
@@ -149,7 +150,12 @@ public class ArgsParser {
                 function = searchInFunctionsByArg(appArguments.getFunctions(), arg);
             }
             else {
-                throw new ArgsException("Unknown argument: " + arg);
+                if (!canContainSingleArgs){
+                    throw new ArgsException("App does not can contain single arguments");
+                }
+                else{
+                  arguments.add(arg);
+                }
             }
         }
 
@@ -176,6 +182,10 @@ public class ArgsParser {
 
     public List<Function> getFunctions() {
         return functions;
+    }
+    
+    public List<String> getArguments() {
+      return arguments;
     }
 
     public Function getFunction(){

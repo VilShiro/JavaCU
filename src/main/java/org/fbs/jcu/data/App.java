@@ -8,7 +8,7 @@ import java.util.List;
 
 public class App {
 
-    public App(String[] args, AppArguments appArguments, boolean mustContainsArgs, String appName, String projectPackage) throws ArgsException {
+    public App(String[] args, AppArguments appArguments, boolean mustContainsArgs, boolean canContainSingleArgs, String appName, String projectPackage) throws ArgsException {
         this.args = args;
         this.appArguments = appArguments;
         this.appArguments.addToFunctions(new Function("help", "Get full info about options, keys and functions") {
@@ -24,7 +24,7 @@ public class App {
                 );
             }
         });
-        this.argsParser = new ArgsParser(args, this.appArguments, mustContainsArgs);
+        this.argsParser = new ArgsParser(args, this.appArguments, mustContainsArgs, canContainSingleArgs);
         this.appName = appName;
         this.projectPackage = projectPackage;
         doBashApp();
@@ -168,7 +168,7 @@ public class App {
         return projectPackage;
     }
 
-    public ArgsParser getParsed() {
+    public static ArgsParser getParsed() {
         return argsParser;
     }
 

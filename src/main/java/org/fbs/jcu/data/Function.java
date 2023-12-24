@@ -30,9 +30,18 @@ public abstract class Function {
     }
 
     private final String typing;
+    private boolean called = false;
     private String info;
     private final List<Option> options = new ArrayList<>();
     private final List<Key> keys = new ArrayList<>();
+
+    public void setCalled(){
+      called = true;
+    }
+
+    public boolean isCalled(){
+      return called;
+    }
 
     public void addOptions(Option[] options){
         this.options.addAll(Arrays.asList(options));
